@@ -70,32 +70,43 @@ function modules() {
   return merge(bootstrap, fontAwesomeCSS, fontAwesomeWebfonts, jquery, jqueryEasing);
 }
 
-// CSS task
+// SCSS task
+/*function scss() {
+  return gulp
+   .src("./scss/!**!/!*.scss")
+ .pipe(plumber())
+ .pipe(sass({
+   outputStyle: "expanded",
+   includePaths: "./node_modules",
+ }))
+ .on("error", sass.logError)
+ .pipe(autoprefixer({
+   browsers: ['last 2 versions'],
+   cascade: false
+ }))
+ .pipe(header(banner, {
+   pkg: pkg
+ }))
+ .pipe(gulp.dest("./css"))
+ .pipe(rename({
+   suffix: ".min"
+ }))
+ .pipe(cleanCSS())
+ .pipe(gulp.dest("./!**!/!*.css"))
+ .pipe(browsersync.stream());
+
+}*/
 function css() {
   return gulp
-    .src("./scss/**/*.scss")
-    .pipe(plumber())
-    .pipe(sass({
-      outputStyle: "expanded",
-      includePaths: "./node_modules",
-    }))
-    .on("error", sass.logError)
-    .pipe(autoprefixer({
-      browsers: ['last 2 versions'],
-      cascade: false
-    }))
-    .pipe(header(banner, {
-      pkg: pkg
-    }))
-    .pipe(gulp.dest("./css"))
-    .pipe(rename({
-      suffix: ".min"
-    }))
-    .pipe(cleanCSS())
-    .pipe(gulp.dest("./css"))
-    .pipe(browsersync.stream());
+  .src('./css/*.css')
+  //The method pipe() allow you to chain multiple tasks together
+  //I execute the task to minify the files
+      .pipe(cleanCSS())
+      //I define the destination of the minified files with the method dest
+      .pipe(rename({
+        suffix: ".min"
+      })).pipe(gulp.dest("./dist"))
 }
-
 // JS task
 function js() {
   return gulp
@@ -116,7 +127,8 @@ function js() {
 
 // Watch files
 function watchFiles() {
-  gulp.watch("./scss/**/*", css);
+  gulp.watch("./css/**/*", css);
+ // gulp.watch("./scss/**/*", scss);
   gulp.watch(["./js/**/*", "!./js/**/*.min.js"], js);
   gulp.watch("./**/*.html", browserSyncReload);
 }
